@@ -1,0 +1,139 @@
+// components/ProjectFormDialog.tsx
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { showAddedToast } from '@/lib/utils';
+import { useForm } from '@inertiajs/react';
+import { FilePlus } from 'lucide-react';
+import { useState } from 'react';
+import { route } from 'ziggy-js';
+
+export default function AddEmployeeDialog() {
+    const [open, setOpen] = useState(false);
+
+    const { data, setData, post, processing, errors, reset } = useForm<{
+        name: string;
+        email: string;
+        password: string;
+        password_confirmation: string;
+    }>({
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '', // 👈 important
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(route('employees.store'), {
+            onSuccess: () => {
+                reset(); // reset form
+                showAddedToast('Employee Added Successfully');
+                setOpen(false); // close dialog
+            },
+            onError: (errors) => {
+                console.log(errors);
+            },
+        });
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant={'default'}>
+                    <FilePlus />
+                    Add Employee
+                </Button>
+            </DialogTrigger>
+
+            <DialogContent className="max-h-[90vh] overflow-y-scroll">
+                <DialogHeader>
+                    <DialogTitle>
+                        <div className="flex items-center">
+                            <FilePlus className="mr-3" />
+                            Add Employee
+                        </div>
+                    </DialogTitle>
+                    <DialogDescription>
+                        Fill in the Employee details below
+                    </DialogDescription>
+                </DialogHeader>
+
+                <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+                    <Label>Employee Name</Label>
+                    <Input 
+                        type="text"
+                        name="name"
+                        value={data.name}
+                        onChange={(e) => setData('name', e.target.value)}
+                        />
+                        {errors.name && (
+                            <p className="text-sm text-red-500">
+                                {errors.name}
+                            </p>
+                        )}
+                    <Label>Employee Email</Label>
+                    <Input
+                        type="email"
+                        name="email"
+                        value={data.email}
+                        onChange={(e) => setData('email', e.target.value)}
+                    />
+                    {errors.email && (
+                            <p className="text-sm text-red-500">
+                                {errors.email}
+                            </p>
+                        )}
+                    <Label>Password</Label>
+                    <Input
+                        type="password"
+                        name="password"
+                        value={data.password}
+                        onChange={(e) => setData('password', e.target.value)}
+                    />
+                    {errors.password && (
+                            <p className="text-sm text-red-500">
+                                {errors.password}
+                            </p>
+                        )}
+                    <Label>Confirm Password</Label>
+                    <Input
+                        type="password"
+                        name="password_confirmation"
+                        value={data.password_confirmation}
+                        onChange={(e) =>
+                            setData('password_confirmation', e.target.value)
+                        }
+                    />
+                    {errors.password_confirmation && (
+                            <p className="text-sm text-red-500">
+                                {errors.password_confirmation}
+                            </p>
+                        )}
+                    <div className="flex justify-end gap-2">
+                        <Button type="submit" disabled={processing}>
+                            Save
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {setOpen(false)
+                                reset();
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
