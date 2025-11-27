@@ -8,6 +8,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\ProfileController;
 
 Route::get('/', function () {
@@ -17,9 +18,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard',DashboardController::class)->name('dashboard');
 
 });
 
