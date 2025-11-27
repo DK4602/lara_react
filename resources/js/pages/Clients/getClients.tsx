@@ -4,7 +4,7 @@ import { Project, User, type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import AddUserDialog from '../User/addUserDialog';
-import DeleteUserButton from '../User/deleteUserButton';
+import DeleteUserButton from '../../components/deleteButton';
 import EditUserDialog from '../User/editUserDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -55,7 +55,7 @@ export default function getClients({ data }: {data:User[]}) {
                                 <EditUserDialog userData={client} role='clients'/>
                             </TableCell>
                             <TableCell>
-                                <DeleteUserButton id={client.id} role='clients'/>
+                                <DeleteUserButton id={client.id} type='clients'/>
                             </TableCell>
                         </TableRow>
                     ))}

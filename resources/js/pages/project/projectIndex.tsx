@@ -1,6 +1,6 @@
-import PendingBadge from '@/components/pendingBadge';
-import InprogressBadge from '@/components/inprogressBadge';
 import CompletedBadge from '@/components/completedBadge';
+import InprogressBadge from '@/components/inprogressBadge';
+import PendingBadge from '@/components/pendingBadge';
 import {
     Table,
     TableBody,
@@ -13,8 +13,8 @@ import AppLayout from '@/layouts/app-layout';
 import { Paginated, Project, User, type BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import AddProjectDialog from './addProjectDialog';
-import EditProjectDialog from './editProjectDialog';
 import DeleteProjectButton from './deleteProjectButton';
+import EditProjectDialog from './editProjectDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -29,6 +29,7 @@ export default function ProjectIndex() {
         employee: User[];
         client: User[];
     }>().props;
+    const { auth } = usePage().props;
     const startNo = (data.current_page - 1) * data.per_page + 1;
 
     const pendingTasks = (data: Project) => {
@@ -49,8 +50,6 @@ export default function ProjectIndex() {
         );
     };
 
-    
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="mt-5">
@@ -65,12 +64,21 @@ export default function ProjectIndex() {
                             <TableHead>ID</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Description</TableHead>
-                            <TableHead>Employee</TableHead>
-                            <TableHead>Client</TableHead>
+                            {(auth.permissions?.isAdmin ||
+                                auth.permissions?.isClient) && (
+                                <TableHead>Employee</TableHead>
+                            )}
+                            {(auth.permissions?.isAdmin ||
+                                auth.permissions?.isEmployee) && (
+                                <TableHead>Client</TableHead>
+                            )}
                             <TableHead>Total Tasks</TableHead>
-                            <TableHead colSpan={2} className="text-center">
+                            {(auth.permissions?.isAdmin ||
+                                auth.permissions?.isEmployee) && (
+                                 <TableHead colSpan={2} className="text-center">
                                 Actions
                             </TableHead>
+                            )}
                         </TableRow>
                     </TableHeader>
 
@@ -78,30 +86,39 @@ export default function ProjectIndex() {
                         {data?.data?.map((project, index) => (
                             <TableRow key={project.id}>
                                 <TableCell>{index + startNo}</TableCell>
-                                <Link href={`/projects/${project.id}`}>
-                                    <TableCell className="font-medium">
+                                <TableCell className="font-medium">
+                                    <Link href={`/projects/${project.id}`}>
                                         {project.project_name}
-                                    </TableCell>
-                                </Link>
+                                    </Link>
+                                </TableCell>
                                 <TableCell className="max-w-xl font-medium break-words whitespace-normal">
                                     {project.project_description}
                                 </TableCell>
+                                {(auth.permissions?.isAdmin ||
+                                    auth.permissions?.isClient) && (
+                                    <TableCell>
+                                        {project.employees?.length ? (
+                                            <ul>
+                                                {project.employees.map(
+                                                    (emp) => (
+                                                        <li key={emp.id}>
+                                                            {emp.name}
+                                                        </li>
+                                                    ),
+                                                )}
+                                            </ul>
+                                        ) : (
+                                            'N/A'
+                                        )}
+                                    </TableCell>
+                                )}
 
-                                <TableCell>
-                                    {project.employees?.length ? (
-                                        <ul>
-                                            {project.employees.map((emp) => (
-                                                <li key={emp.id}>{emp.name}</li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        'N/A'
-                                    )}
-                                </TableCell>
-
-                                <TableCell>
-                                    {project.client?.name ?? 'N/A'}
-                                </TableCell>
+                                {(auth.permissions?.isAdmin ||
+                                    auth.permissions?.isEmployee) && (
+                                    <TableCell>
+                                        {project.client?.name ?? 'N/A'}
+                                    </TableCell>
+                                )}
                                 <TableCell className="text-center">
                                     <div className="flex flex-col">
                                         <span>
@@ -111,23 +128,32 @@ export default function ProjectIndex() {
                                         </span>
 
                                         <span>
-                                           <InprogressBadge data={`In Progress: ${inprogressTasks(project)}`}/>
+                                            <InprogressBadge
+                                                data={`In Progress: ${inprogressTasks(project)}`}
+                                            />
                                         </span>
                                         <span>
-                                            <CompletedBadge data={`Completed: ${completedTasks(project)}`}/>
+                                            <CompletedBadge
+                                                data={`Completed: ${completedTasks(project)}`}
+                                            />
                                         </span>
                                     </div>
                                 </TableCell>
+                                {(auth.permissions?.isAdmin || auth.permissions?.isEmployee)&& (
                                 <TableCell>
                                     <EditProjectDialog
                                         project={project}
                                         employees={employee}
                                         clients={client}
                                     />
-                                </TableCell>
+                                </TableCell>    
+                                )}
+    
+                                {(auth.permissions?.isAdmin)&& (
                                 <TableCell>
-                                    <DeleteProjectButton id={project.id}/>
+                                    <DeleteProjectButton id={project.id} />
                                 </TableCell>
+                                )}
                             </TableRow>
                         ))}
                     </TableBody>

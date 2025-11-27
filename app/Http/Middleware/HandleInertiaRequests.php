@@ -49,7 +49,7 @@ class HandleInertiaRequests extends Middleware
                 ? [
                     'isAdmin' => $request->user()->role === 'admin',
                     'isEmployee' => $request->user()->role === 'employee',
-                    'isClient' => $request->user()->role === 'admin',
+                    'isClient' => $request->user()->role === 'client',
                   ]
                 : [],
             ],

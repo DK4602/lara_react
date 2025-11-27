@@ -12,10 +12,10 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import {  Project, Task, type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import TaskAddDialog from '../task/taskAddDialog';
+import TaskAddDialog from './EditTask/taskAddDialog';
 // import TaskEditDialog from '../task/taskEditDialog';
-import DeleteTaskButton from '../task/deleteTaskButton';
-import TaskEditDialog from '../task/taskEditDialog';
+import DeleteTaskButton from './EditTask/deleteTaskButton';
+import TaskEditDialog from './EditTask/taskEditDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -36,6 +36,7 @@ export default function GetProject() {
         data: Project;
         tasks:Task
     }>().props;
+    const { auth } = usePage().props;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             
@@ -78,7 +79,9 @@ export default function GetProject() {
                 <CardHeader className='text-xl font-semibold'>
                     <div className="flex justify-between">
                     <p>Tasks</p>
-                    <TaskAddDialog task={data}/>
+                    {(auth.permissions?.isAdmin || auth.permissions?.isEmployee)&&(
+                        <TaskAddDialog task={data}/>
+                    )}
                     </div>
                 </CardHeader>
                 
@@ -118,8 +121,12 @@ export default function GetProject() {
                                             Assigned to : {task.user.name}
                                         </div>
                                     <div className="flex gap-3">
+                                        {(auth.permissions?.isAdmin || auth.permissions?.isEmployee) &&(
                                         <TaskEditDialog key={task.id} task={task} project={data}/>
+                                        )}
+                                        {auth.permissions?.isAdmin &&(
                                         <DeleteTaskButton id={task.id}/>
+                                        )}
                                     </div>
                                     </div>
                                 </CardFooter>

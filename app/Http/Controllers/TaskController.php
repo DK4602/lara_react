@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use Inertia\Inertia;
 use App\Imports\TasksImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +36,9 @@ class TaskController extends Controller
         
         $data = $this->taskRepositories->index(['project'],['employee_id'=>$id],10,['project_id'=>'asc']);
         $project = $this->projectRepositories->index(['employees'], [], null, $Efilter);
-        return view('task',compact('data','project'));
+        // return view('task',compact('data','project'));
+        // dd($project);
+        return Inertia::render('task/getTasks', compact('data', 'project'));
     }
     
     public function store(StoreTaskRequest $request)

@@ -32,7 +32,7 @@ import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, FolderOpenDot, LayoutGrid, Menu, Search, Users } from 'lucide-react';
+import { BookOpen, ClipboardList, Folder, FolderOpenDot, LayoutGrid, Menu, Search, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
@@ -86,6 +86,16 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                       href: "/clients",
                       icon: Users,
                   },
+              ]
+            : []),
+        ...(auth.permissions?.isEmployee
+            ? [
+                  {
+                      title: "Tasks",
+                      href: "/tasks",
+                      icon: ClipboardList,
+                  },
+                  
               ]
             : []),
     ];

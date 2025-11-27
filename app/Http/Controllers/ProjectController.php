@@ -106,6 +106,11 @@ class ProjectController extends Controller
             $data = $this->projectRepositories->show($project->id, ['employees', 'tasks', 'client']);
             $tasks = $this->taskRepositories->index(['user'], ['project_id' => $project->id]);
         }
+
+        if(Auth::user()->role === 'client') {
+            $data = $this->projectRepositories->show($project->id, ['employees', 'tasks', 'client'], ['client_id' => Auth::user()->id]);
+            $tasks = $this->taskRepositories->index(['user'], ['project_id' => $project->id]);
+        }
         // dd($data);
         // return view('project.GetProject', compact('data', 'tasks'));
         return Inertia::render('project/getProject', compact('data', 'tasks'));

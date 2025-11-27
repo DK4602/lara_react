@@ -14,16 +14,16 @@ import React from 'react';
 import { route } from 'ziggy-js';
 import { showDeletedToast } from '@/lib/utils';
 
-export default function DeleteEmployeeButton({ id,role }: { id: number; role: string }) {
+export default function DeleteButton({ id,type }: { id: number; type: string }) {
     const [open, setOpen] = React.useState(false);
     const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1).toLowerCase();
-    const Capitalize_role = capitalize(role);
+    const Capitalize_type = capitalize(type);
 
     const handleDelete = () => {
-        router.delete(route(`${role}.destroy`, id), {
+        router.delete(route(`${type}.destroy`, id), {
             onSuccess: () => {
                 setOpen(false);
-                showDeletedToast(`${Capitalize_role} Deleted Successfully`);}
+                showDeletedToast(`${Capitalize_type} Deleted Successfully`);}
                  // close dialog after delete
         });
     };
@@ -32,7 +32,7 @@ export default function DeleteEmployeeButton({ id,role }: { id: number; role: st
             <DialogTrigger asChild>
                 <Button variant="destructive" className='hover:cursor-pointer'>
                     <UserRoundX className="mr-2 h-4 w-4 " />
-                    Delete {Capitalize_role}
+                    Delete {Capitalize_type}
                 </Button>
             </DialogTrigger>
 
@@ -57,7 +57,7 @@ export default function DeleteEmployeeButton({ id,role }: { id: number; role: st
                         </motion.div>
                     </div>
                     <span className="mt-6 text-center">
-                        Are you sure you want to delete this {role}?
+                        Are you sure you want to delete this {type}?
                     </span>
                 </div>
 

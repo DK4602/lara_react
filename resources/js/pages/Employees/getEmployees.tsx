@@ -5,7 +5,7 @@ import { Head, Link } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import AddUserDialog from '../User/addUserDialog';
 import EditUserDialog from '../User/editUserDialog';
-import DeleteUserButton from '../User/deleteUserButton';
+import DeleteUserButton from '../../components/deleteButton';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -54,7 +54,7 @@ export default function getEmployees({ data }: {data:User[]}) {
                                 <EditUserDialog userData={employee} role='employees'/>
                             </TableCell>
                             <TableCell>
-                                <DeleteUserButton id={employee.id} role='employees'/>
+                                <DeleteUserButton id={employee.id} type='employees'/>
                             </TableCell>
                         </TableRow>
                     ))}
