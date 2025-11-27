@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import AddEmployeeDialog from './addEmployeeDialog';
+import EditEmployeeDialog from './editEmployeeDialog';
+import DeleteEmployeeButton from './deleteEmployeeButton';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -50,10 +52,10 @@ export default function getEmployees({ data }: {data:User[]}) {
                                     </ul>
                             </TableCell>
                             <TableCell>
-                                <Button variant="outline">Edit</Button>
+                                <EditEmployeeDialog employee={employee}/>
                             </TableCell>
                             <TableCell>
-                                <Button className='mr-5' variant="destructive">Delete</Button>
+                                <DeleteEmployeeButton id={employee.id}/>
                             </TableCell>
                         </TableRow>
                     ))}
