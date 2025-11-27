@@ -4,43 +4,44 @@ import { Project, User, type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import AddUserDialog from '../User/addUserDialog';
-import EditUserDialog from '../User/editUserDialog';
 import DeleteUserButton from '../User/deleteUserButton';
+import EditUserDialog from '../User/editUserDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Employees',
-        href: route('employees.index'),
+        title: 'Clients',
+        href: route('clients.index'),
     },
 ];
 
-export default function getEmployees({ data }: {data:User[]}) {
+export default function getClients({ data }: {data:User[]}) {
     console.log(data)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex justify-between items-center mt-5">
             <div className="text-2xl font-semibold">
-            Employees
+            Clients
             </div>
-            <AddUserDialog role='employees'/></div>
+            <AddUserDialog role='clients'/>
+            </div>
             <Table className="max-w-screen mb-5">
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Employee Name</TableHead>
-                        <TableHead>Employee Email</TableHead>
+                        <TableHead>Client Name</TableHead>
+                        <TableHead>Client Email</TableHead>
                         <TableHead>Projects</TableHead>
                         <TableHead colSpan={2} className='text-center'>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.map((employee) => (
-                        <TableRow key={employee.id}>
-                            <TableCell>{employee.name}</TableCell>
-                            <TableCell>{employee.email}</TableCell>
+                    {data.map((client) => (
+                        <TableRow key={client.id}>
+                            <TableCell>{client.name}</TableCell>
+                            <TableCell>{client.email}</TableCell>
                             <TableCell>
                                 <ul className="list-disc list-inside">
-                                {employee.projects_by_employee
+                                {client.projects_by_client
                                     .map((project : Project) =>
                                         <li key={project.id}>
                                             <Link href={route('projects.show', project.id)}>
@@ -51,10 +52,10 @@ export default function getEmployees({ data }: {data:User[]}) {
                                     </ul>
                             </TableCell>
                             <TableCell>
-                                <EditUserDialog userData={employee} role='employees'/>
+                                <EditUserDialog userData={client} role='clients'/>
                             </TableCell>
                             <TableCell>
-                                <DeleteUserButton id={employee.id} role='employees'/>
+                                <DeleteUserButton id={client.id} role='clients'/>
                             </TableCell>
                         </TableRow>
                     ))}

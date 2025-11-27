@@ -12,11 +12,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { showAddedToast } from '@/lib/utils';
 import { useForm } from '@inertiajs/react';
-import { FilePlus } from 'lucide-react';
+import { UserRoundPlus } from 'lucide-react';
 import { useState } from 'react';
 import { route } from 'ziggy-js';
 
-export default function AddEmployeeDialog() {
+export default function AddUserDialog({role}:{role:string}) {
     const [open, setOpen] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm<{
@@ -30,13 +30,15 @@ export default function AddEmployeeDialog() {
         password: '',
         password_confirmation: '', // 👈 important
     });
+    const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1).toLowerCase();
+    const Capitalize_role = capitalize(role);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('employees.store'), {
+        post(route(`${role}.store`), {
             onSuccess: () => {
                 reset(); // reset form
-                showAddedToast('Employee Added Successfully');
+                showAddedToast(` ${Capitalize_role} Added Successfully`);
                 setOpen(false); // close dialog
             },
             onError: (errors) => {
@@ -49,8 +51,8 @@ export default function AddEmployeeDialog() {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant={'default'}>
-                    <FilePlus />
-                    Add Employee
+                    <UserRoundPlus />
+                    Add {Capitalize_role}
                 </Button>
             </DialogTrigger>
 
@@ -58,17 +60,17 @@ export default function AddEmployeeDialog() {
                 <DialogHeader>
                     <DialogTitle>
                         <div className="flex items-center">
-                            <FilePlus className="mr-3" />
-                            Add Employee
+                            <UserRoundPlus className="mr-3" />
+                            Add {Capitalize_role}
                         </div>
                     </DialogTitle>
                     <DialogDescription>
-                        Fill in the Employee details below
+                        Fill in the {Capitalize_role} details below
                     </DialogDescription>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-                    <Label>Employee Name</Label>
+                    <Label>{Capitalize_role} Name</Label>
                     <Input 
                         type="text"
                         name="name"
@@ -80,7 +82,7 @@ export default function AddEmployeeDialog() {
                                 {errors.name}
                             </p>
                         )}
-                    <Label>Employee Email</Label>
+                    <Label>{Capitalize_role} Email</Label>
                     <Input
                         type="email"
                         name="email"

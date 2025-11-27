@@ -42,6 +42,7 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; 
     projects_by_employee: Project[];
+    projects_by_client: Project[];
     // This allows for additional properties...
 }
 
@@ -92,4 +93,20 @@ export interface ProjectIndexProps{
     data: Paginated<Project>;
     employee: User;
     client: User;
+}
+
+export interface PermissionMap {
+  [key: string]: boolean;
+}
+
+export interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export interface Auth {
+  user: AuthUser;
+  permissions: PermissionMap;
 }

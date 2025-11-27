@@ -36,23 +36,7 @@ import { BookOpen, Folder, FolderOpenDot, LayoutGrid, Menu, Search, Users } from
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Project',
-        href: '/projects',
-        icon: FolderOpenDot,
-    },
-    {
-        title: 'Employees',
-        href: '/employees',
-        icon: Users,
-    },
-];
+
 
 const rightNavItems: NavItem[] = [
     {
@@ -78,6 +62,33 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const getInitials = useInitials();
+    const mainNavItems: NavItem[] = [
+        {
+            title: "Dashboard",
+            href: dashboard(),
+            icon: LayoutGrid,
+        },
+        {
+            title: "Project",
+            href: "/projects",
+            icon: FolderOpenDot,
+        },
+        // Show only if user has permission
+        ...(auth.permissions?.isAdmin
+            ? [
+                  {
+                      title: "Employees",
+                      href: "/employees",
+                      icon: Users,
+                  },
+                  {
+                      title: "Clients",
+                      href: "/clients",
+                      icon: Users,
+                  },
+              ]
+            : []),
+    ];
     return (
         <>
             <div className="border-b border-sidebar-border/80">

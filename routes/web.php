@@ -2,6 +2,7 @@
 
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use App\Http\Middleware\isAdmin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ClientController;
@@ -24,8 +25,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('projects', ProjectController::class);
-    Route::resource('employees', EmployeeController::class);
-    Route::resource('clients', ClientController::class);
+    Route::resource('employees', EmployeeController::class)->middleware(isAdmin::class);
+    Route::resource('clients', ClientController::class)->middleware(isAdmin::class);
     Route::resource('tasks', TaskController::class);
     Route::post('tasks/import/{projectId}', [TaskController::class, 'import'])->name('tasks.import');
 });

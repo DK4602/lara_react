@@ -14,22 +14,25 @@ import React from 'react';
 import { route } from 'ziggy-js';
 import { showDeletedToast } from '@/lib/utils';
 
-export default function DeleteEmployeeButton({ id }: { id: number }) {
+export default function DeleteEmployeeButton({ id,role }: { id: number; role: string }) {
+    const [open, setOpen] = React.useState(false);
+    const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1).toLowerCase();
+    const Capitalize_role = capitalize(role);
+
     const handleDelete = () => {
-        router.delete(route('employees.destroy', id), {
+        router.delete(route(`${role}.destroy`, id), {
             onSuccess: () => {
                 setOpen(false);
-                showDeletedToast('Employee Deleted Successfully');}
+                showDeletedToast(`${Capitalize_role} Deleted Successfully`);}
                  // close dialog after delete
         });
     };
-    const [open, setOpen] = React.useState(false);
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="destructive" className='hover:cursor-pointer'>
                     <UserRoundX className="mr-2 h-4 w-4 " />
-                    Delete Employee
+                    Delete {Capitalize_role}
                 </Button>
             </DialogTrigger>
 
@@ -54,7 +57,7 @@ export default function DeleteEmployeeButton({ id }: { id: number }) {
                         </motion.div>
                     </div>
                     <span className="mt-6 text-center">
-                        Are you sure you want to delete this employee?
+                        Are you sure you want to delete this {role}?
                     </span>
                 </div>
 

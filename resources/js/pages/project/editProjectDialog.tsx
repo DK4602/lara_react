@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Project, User } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { FilePenLine } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { route } from 'ziggy-js';
 import { showUpdatedToast } from '@/lib/utils';
@@ -35,6 +35,7 @@ export default function EditProjectDialog({
 }: EditProjectDialogProps) {
     const [open, setOpen] = useState(false);
 
+   
     const {
         data: formData,
         setData,
@@ -50,6 +51,19 @@ export default function EditProjectDialog({
         client_id: project.client_id ?? '',
         employee_ids: project.employees?.map((e) => e.id) ?? [],
     });
+
+    useEffect(() => {
+            if (project) {
+                setData('project_name', project.project_name);
+                setData('project_description', project.project_description);
+                setData('start_date', project.start_date);
+                setData('end_date', project.end_date);
+                setData('client_id', project.client_id??'');
+                setData('employee_ids', project.employees?.map((e) => e.id) ?? []);
+            }
+        }, [project, setData]);
+
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

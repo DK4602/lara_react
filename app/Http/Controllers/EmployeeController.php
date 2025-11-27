@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEmployeeRequest;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Repositories\TaskRepositories;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Repositories\EmployeeRepositories;
-use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
+
 
 class EmployeeController extends Controller
 {
@@ -23,7 +24,7 @@ class EmployeeController extends Controller
         return Inertia::render('Employees/getEmployees', compact('data'));
     }
 
-    public function store(StoreEmployeeRequest $request) 
+    public function store(StoreUserRequest $request) 
     {
         $data = $request->validated();
         $data['role']='employee';

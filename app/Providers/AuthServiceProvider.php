@@ -22,13 +22,15 @@ class AuthServiceProvider extends ServiceProvider
     {
         //
         Gate::define('is-admin', function ($user) {
-            return $user->role === 'admin';
+            return strtolower($user->role) === 'admin';
         });
+
         Gate::define('is-employee', function ($user) {
-            return $user->role === 'employee';
+            return strtolower($user->role) === 'employee';
         });
+
         Gate::define('is-client', function ($user) {
-            return $user->role === 'client';
+            return strtolower($user->role) === 'client';
         });
 
         Gate::define('view-project', function ($user, $project) {
