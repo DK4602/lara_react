@@ -32,7 +32,7 @@ import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, FolderOpenDot, LayoutGrid, Menu, Search } from 'lucide-react';
+import { BookOpen, Folder, FolderOpenDot, LayoutGrid, Menu, Search, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
@@ -50,7 +50,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Employees',
         href: '/employees',
-        icon: FolderOpenDot,
+        icon: Users,
     },
 ];
 
