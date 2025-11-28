@@ -15,7 +15,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function getClients({ data }: {data:User[]}) {
-    console.log(data)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />

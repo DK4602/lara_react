@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { showUpdatedToast } from '@/lib/utils';
 import { Project, Task } from '@/types';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { FilePenLine } from 'lucide-react';
 import React, { useState,useEffect } from 'react';
 import Select from 'react-select';
@@ -34,8 +34,8 @@ export default function TaskEditDialog({
     task: Task;
     project: Project;
 }) {
-    console.log(task);
     const [open, setOpen] = useState(false);
+    const { auth } = usePage().props;
 
     const { data, setData, put, processing, errors, reset } = useForm<{
         project_id: number;
@@ -207,7 +207,7 @@ export default function TaskEditDialog({
                             </p>
                         )}
                     </div>
-
+                    {(auth.permissions?.isAdmin) && (
                     <div>
                         <Label>Employees</Label>
                         <Select
@@ -229,6 +229,7 @@ export default function TaskEditDialog({
                             </p>
                         )}
                     </div>
+                    )}
 
                     <div className="flex justify-end gap-2">
                         <Button type="submit" disabled={processing}>

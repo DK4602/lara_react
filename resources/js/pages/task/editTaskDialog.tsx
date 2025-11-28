@@ -34,7 +34,6 @@ export default function EditTaskDialog({
     task: Task;
     project: Project;
 }) {
-    console.log(project);
     const [open, setOpen] = useState(false);
 
     const { data, setData, put, processing, errors, reset } = useForm<{

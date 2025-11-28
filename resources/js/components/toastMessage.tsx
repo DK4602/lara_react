@@ -8,7 +8,6 @@ interface ToastMessageProps {
 }
 
 export default function ToastMessage({ message, show }: ToastMessageProps) {
-    console.log(message)
     useEffect(() => {
         if (show) {
             toast.success(message);

@@ -37,7 +37,6 @@ export default function AddTaskDialog({
     project: Project;
    
 }) {
-    console.log(project);
     const [open, setOpen] = useState(false);
     const { auth } = usePage<PageProps>().props;
     const { data, setData, post, processing, errors, reset } = useForm<{
