@@ -118,7 +118,7 @@ export default function GetProject() {
                                 <CardFooter>
                                     <div className="w-full flex justify-between">
                                         <div className="mt-2 text-sm text-gray-700">
-                                            Assigned to : {task.user.name}
+                                            Assigned to : {task.user?.name}
                                         </div>
                                     <div className="flex gap-3">
                                         {(auth.permissions?.isAdmin || auth.permissions?.isEmployee) &&(

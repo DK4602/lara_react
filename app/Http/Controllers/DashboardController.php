@@ -69,17 +69,21 @@ class DashboardController extends Controller
         }
 
         if (Auth::user()->role === 'client') {
-            $data = $this->clientRepositories->show($id, ['projectsByClient']);
+            $projectfilter = $this->projectRepositories->index([], ['client_id' => $id]);
+            $projectWithTasks = $projectfilter->map(fn($project) => [
+                'name' => $project->project_name,
+                'tasks' => $project->tasks->count(), // Only count tasks relation
+            ]);
+            $project = $this->clientRepositories->show($id, ['projectsByClient']);
             $task = $this->clientRepositories->show($id, ['tasksByClient']);
-            $ip_task = $task->tasksByClient->where('status', 'in_progress')->count();
-            $pending_task = $task->tasksByClient->where('status', 'pending')->count();
-            $completed_task = $task->tasksByClient->where('status', 'completed')->count();
-            // $chartTask = LarapexChart::donutChart()
-            //     ->setTitle('Tasks Status')
-            //     ->addData([$pending_task, $ip_task, $completed_task])
-            //     ->setLabels(['Pending', 'In Progress', 'Completed'])
-            //     ->setColors(['#F59E0B', '#6366F1', '#10B981']);
-            return Inertia::render('Dashboard/dashboard', compact('data', 'task'));
+            $taskStatus['ip_task'] = $task->tasksByClient->where('status', 'in_progress')->count();
+            $taskStatus['pending_task'] = $task->tasksByClient->where('status', 'pending')->count();
+            $taskStatus['completed_task'] = $task->tasksByClient->where('status', 'completed')->count();
+            $totalTasks = $task->tasksByClient->count();
+            $complete_percent = $totalTasks > 0
+                ? ( $taskStatus['completed_task'] / $totalTasks) * 100
+                : 0;
+            return Inertia::render('Dashboard/clientDashboard', compact('project', 'task','complete_percent', 'taskStatus', 'projectWithTasks'));
         }
     }
 }
