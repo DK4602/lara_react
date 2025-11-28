@@ -4,6 +4,7 @@
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source inline("{hover:,sm:,md:,lg:}{bg,border,text}-{purple,blue,amber,indigo}-{100,200,300,400,500,600,700,800,900}");
 
 @custom-variant dark (&:is(.dark *));
 

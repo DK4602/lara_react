@@ -40,9 +40,9 @@ export interface User {
     two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;
-    [key: string]: unknown; 
+    //relations
     projects_by_employee: Project[];
-    projects_by_client: Project[];
+    projects_by_client?: Project[];
     // This allows for additional properties...
 }
 

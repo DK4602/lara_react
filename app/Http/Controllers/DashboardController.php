@@ -43,21 +43,29 @@ class DashboardController extends Controller
         }
 
         if (Auth::user()->role === 'employee') {
-            $data = $this->employeeRepositories->show($id, ['projectsByEmployee']);
+            $employeeFilter = function ($query) {
+                return $query->whereHas('employees', function ($q) {
+                    $q->where('users.id', Auth::id());
+                });
+            };
+            $projectfilter = $this->projectRepositories->index([], [], null, $employeeFilter);
+            
+            $projectWithTasks = $projectfilter->map(fn($project) => [
+                'name' => $project->project_name,
+                'tasks' => $project->tasks->count(), // Only count tasks relation
+            ]);
+           
+            $project = $this->employeeRepositories->show($id, ['projectsByEmployee']);
+            $taskCount = $this->taskRepositories->index([], ['employee_id' => $id])->count(); 
             $task = $this->employeeRepositories->show($id, ['tasksByEmployee']);
-            $ip_task        = $task->tasksByEmployee->where('status', 'in_progress')->count();
-            $pending_task   = $task->tasksByEmployee->where('status', 'pending')->count();
-            $completed_task = $task->tasksByEmployee->where('status', 'completed')->count();
+            $taskStatus['ip_task'] = $task->tasksByEmployee->where('status', 'in_progress')->count();
+            $taskStatus['pending_task'] = $task->tasksByEmployee->where('status', 'pending')->count();
+            $taskStatus['completed_task'] = $task->tasksByEmployee->where('status', 'completed')->count();
             $totalTasks = $task->tasksByEmployee->count();
             $complete_percent = $totalTasks > 0
-                ? ($completed_task / $totalTasks) * 100
+                ? ( $taskStatus['completed_task'] / $totalTasks) * 100
                 : 0;
-            // $chartTask = LarapexChart::donutChart()
-            //     ->setTitle('Tasks Status')
-            //     ->addData([$pending_task, $ip_task, $completed_task])
-            //     ->setLabels(['Pending', 'In Progress', 'Completed'])
-            //     ->setColors(['#F59E0B', '#6366F1', '#10B981']);
-            return Inertia::render('Dashboard/dashboard', compact('data', 'task', 'complete_percent'));
+            return Inertia::render('Dashboard/employeeDashboard', compact('project', 'taskCount', 'complete_percent', 'taskStatus', 'projectWithTasks'));
         }
 
         if (Auth::user()->role === 'client') {
