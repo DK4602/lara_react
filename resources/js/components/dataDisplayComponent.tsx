@@ -23,7 +23,7 @@ export function DataDisplayComponentWithLink({
     return (
         <Link
             href={route(`${page}.index`)}
-            className={`flex h-50 w-1/5 flex-col items-center rounded-2xl border ${borderColor} ${bgColor} shadow-md transition hover:scale-105`}
+            className={`flex h-50 w-1/5 flex-col items-center rounded-2xl border border-${borderColor}-100 ${bgColor} shadow-md transition hover:scale-105`}
         >
             <Icon className={`m-5 h-35 w-35 rounded-3xl p-3 ${iconColor}`} />
             <div className="mb-5 text-lg font-semibold text-gray-700">

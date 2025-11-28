@@ -113,7 +113,7 @@ class ProjectController extends Controller
         }
         // dd($data);
         // return view('project.GetProject', compact('data', 'tasks'));
-        return Inertia::render('project/getProject', compact('data', 'tasks'));
+        return Inertia::render('project/manageMultitask', compact('data', 'tasks'));
     }
 
 

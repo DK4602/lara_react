@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('clients', ClientController::class)->middleware(isAdmin::class);
     Route::resource('tasks', TaskController::class);
     Route::post('tasks/import/{projectId}', [TaskController::class, 'import'])->name('tasks.import');
+    Route::post('tasks/{projectId}/sync', [TaskController::class, 'sync'])->name('tasks.sync');
 });
 
 require __DIR__.'/settings.php';

@@ -34,7 +34,7 @@ export default function EditProjectDialog({
     clients,
 }: EditProjectDialogProps) {
     const [open, setOpen] = useState(false);
-
+    const test =2;
    
     const {
         data: formData,
@@ -61,7 +61,7 @@ export default function EditProjectDialog({
                 setData('client_id', project.client_id??'');
                 setData('employee_ids', project.employees?.map((e) => e.id) ?? []);
             }
-        }, [project, setData]);
+        }, [test,project, setData]);
 
 
 

@@ -11,11 +11,12 @@ import {
 } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import {  Project, Task, type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import TaskAddDialog from './EditTask/taskAddDialog';
 // import TaskEditDialog from '../task/taskEditDialog';
 import DeleteTaskButton from './EditTask/deleteTaskButton';
 import TaskEditDialog from './EditTask/taskEditDialog';
+import { Button } from '@/components/ui/button';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -79,9 +80,14 @@ export default function GetProject() {
                 <CardHeader className='text-xl font-semibold'>
                     <div className="flex justify-between">
                     <p>Tasks</p>
+                    <div className="flex">
                     {(auth.permissions?.isAdmin || auth.permissions?.isEmployee)&&(
                         <TaskAddDialog task={data}/>
                     )}
+                    <Button>
+                        <Link href="/projects">Back to Projects</Link>
+                    </Button>
+                    </div>
                     </div>
                 </CardHeader>
                 

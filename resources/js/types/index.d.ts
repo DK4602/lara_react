@@ -60,7 +60,7 @@ export interface Project {
 }
 
 export interface Task {
-    id: number;
+    id: number | null;
     employee_id: number | null;
     task_name: string;
     task_description: string;
@@ -68,7 +68,9 @@ export interface Task {
     start_date: string; 
     end_date: string;
     project_id: number | null; 
-    project?: Project; // This allows for additional properties...
+    project?: Project;
+    _delete?: boolean;
+    _new?: boolean; // This allows for additional properties...
 }
 
 export type Paginated<T> = {

@@ -104,4 +104,44 @@ class TaskController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function sync(Request $request, $projectId)
+    {
+        $tasks = $request->input('tasks', []);
+        DB::beginTransaction();
+        try {
+            foreach ($tasks as $taskData) {
+                if (isset($taskData['_new']) && $taskData['_new']) {
+                    // Create new task
+                    $this->taskRepositories->store([
+                        'task_name' => $taskData['task_name'],
+                        'task_description' => $taskData['task_description'],
+                        'status' => $taskData['status'],
+                        'project_id' => $projectId,
+                        'employee_id' => $taskData['employee_id'],
+                        'start_date' => $taskData['start_date'],
+                        'end_date' => $taskData['end_date'],
+                    ]);
+                } elseif (isset($taskData['_delete']) && $taskData['_delete']) {
+                    // Delete existing task
+                    $this->taskRepositories->destroy($taskData['id']);
+                } else {
+                    // Update existing task
+                    $this->taskRepositories->update([
+                        'task_name' => $taskData['task_name'],
+                        'task_description' => $taskData['task_description'],
+                        'status' => $taskData['status'],
+                        'employee_id' => $taskData['employee_id'],
+                        'start_date' => $taskData['start_date'],
+                        'end_date' => $taskData['end_date'],
+                    ], $taskData['id']);
+                }
+            }
+            DB::commit();
+            return redirect()->back()->with('success', 'Tasks synchronized successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 }
