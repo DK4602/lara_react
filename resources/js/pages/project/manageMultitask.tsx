@@ -9,9 +9,11 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import useInViewAnimation from '@/hooks/useInViewAnimation';
 import AppLayout from '@/layouts/app-layout';
 import { Project, Task, type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 import React, { useCallback, useMemo, useState } from 'react';
 import Select from 'react-select';
 
@@ -222,7 +224,10 @@ const TaskCard = React.memo<{
     handleChange: (index: number, field: string, value: string | number) => void;
     deleteTask: (index: number) => void;
 }>(({ task, index, statusOptions, employeeOptions, handleChange, deleteTask }) => {
-    const selectedStatus = useMemo(
+  
+  const { ref, isInView } = useInViewAnimation();
+  
+  const selectedStatus = useMemo(
         () => statusOptions.find((opt) => opt.value === task.status),
         [statusOptions, task.status]
     );
@@ -233,6 +238,12 @@ const TaskCard = React.memo<{
     );
 
     return (
+       <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+        >
         <Card className={`my-2 ${task._delete ? 'line-through opacity-40' : ''}`}>
             <CardHeader>
                 <div className="flex items-center justify-between gap-3">
@@ -304,6 +315,7 @@ const TaskCard = React.memo<{
                 </Button>
             </CardFooter>
         </Card>
+        </motion.div>
     );
 });
 
