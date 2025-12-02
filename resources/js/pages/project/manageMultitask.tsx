@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { showUpdatedToast } from '@/lib/utils';
-import { Project, Task, type BreadcrumbItem } from '@/types';
+import { AuthType, Project, Task, type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import React, { useCallback, useMemo, useState } from 'react';
 import Select from 'react-select';
@@ -48,6 +48,7 @@ export default function ManageMultitask() {
     }>().props;
 
     const [tasks, setTasks] = useState<Task[]>(initialTasks || []);
+    const { auth } = usePage<{ auth: AuthType }>().props;
 
     // Memoize employee options with null checking
     const employeeOptions = useMemo(
@@ -199,6 +200,7 @@ export default function ManageMultitask() {
                                 employeeOptions={employeeOptions}
                                 handleChange={handleChange}
                                 deleteTask={deleteTask}
+                                auth={auth}
                             />
                         ))
                     )}
@@ -223,8 +225,10 @@ const TaskCard = React.memo<{
     employeeOptions: { value: number; label: string }[];
     handleChange: (index: number, field: string, value: string | number) => void;
     deleteTask: (index: number) => void;
-}>(({ task, index, statusOptions, employeeOptions, handleChange, deleteTask }) => {
+    auth: AuthType;
+}>(({ task, index, statusOptions, employeeOptions, handleChange, deleteTask, auth }) => {
 
+    console.log(auth)
   
   const selectedStatus = useMemo(
         () => statusOptions.find((opt) => opt.value === task.status),
@@ -271,6 +275,7 @@ const TaskCard = React.memo<{
                         disabled={task._delete}
                     />
                     <div className="flex justify-between gap-3">
+                    {(auth.permissions?.isAdmin) && (
                     <Select
                         className="w-full"
                         options={employeeOptions}
@@ -281,6 +286,7 @@ const TaskCard = React.memo<{
                         isDisabled={task._delete}
                         placeholder="Select employee..."
                     />
+                    )}
                     <Input
                         type="date"
                         className="w-full"

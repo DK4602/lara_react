@@ -98,18 +98,26 @@ export interface ProjectIndexProps{
     client: User;
 }
 
-export interface PermissionMap {
-  [key: string]: boolean;
-}
+export type AuthPermissions = {
+    isAdmin: boolean;
+    isClient: boolean;
+    isEmployee: boolean;
+};
 
-export interface AuthUser {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
+export type AuthUser = {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+    created_at: string;
+    updated_at: string;
+    email_verified_at: string | null;
+    two_factor_confirmed_at: string | null;
+    two_factor_recovery_codes: string | null;
+    two_factor_secret: string | null;
+};
 
-export interface Auth {
-  user: AuthUser;
-  permissions: PermissionMap;
-}
+export type AuthType = {
+    permissions: AuthPermissions;
+    user: AuthUser;
+};

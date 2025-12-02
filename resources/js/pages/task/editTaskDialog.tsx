@@ -221,6 +221,7 @@ export default function EditTaskDialog({
                             onChange={(selected) =>
                                 setData('project_id', selected?.value ?? '')
                             }
+                            isDisabled={true}
                         />
 
                         {errors.project_id && (

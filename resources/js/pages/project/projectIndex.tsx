@@ -10,7 +10,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { Paginated, Project, User, type BreadcrumbItem } from '@/types';
+import { Paginated, Project, User,AuthType, type BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import AddProjectDialog from './addProjectDialog';
 import DeleteProjectButton from './deleteProjectButton';
@@ -29,7 +29,7 @@ export default function ProjectIndex() {
         employee: User[];
         client: User[];
     }>().props;
-    const { auth } = usePage().props;
+    const { auth } = usePage<{ auth: AuthType }>().props;
     const startNo = (data.current_page - 1) * data.per_page + 1;
 
     const pendingTasks = (data: Project) => {
