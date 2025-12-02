@@ -228,8 +228,6 @@ const TaskCard = React.memo<{
     auth: AuthType;
 }>(({ task, index, statusOptions, employeeOptions, handleChange, deleteTask, auth }) => {
 
-    console.log(auth)
-  
   const selectedStatus = useMemo(
         () => statusOptions.find((opt) => opt.value === task.status),
         [statusOptions, task.status]

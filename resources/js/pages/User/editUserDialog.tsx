@@ -63,7 +63,7 @@ export default function EditEmployeeDialog({ userData, role }: { userData: User;
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant={'default'}>
+                <Button variant={'outline'}>
                     <UserRoundCog />
                     Edit {Capitalize_role}
                 </Button>
