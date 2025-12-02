@@ -10,6 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
+import { showUpdatedToast } from '@/lib/utils';
 import { Project, Task, type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -131,6 +132,7 @@ export default function ManageMultitask() {
 
     router.post(`/tasks/${data.id}/sync`, { tasks: payload });
     setTasks(prev => prev.filter(task => !task._delete));
+    showUpdatedToast('Tasks Updated Successfully');
 }, [data, tasks]);
 
     if (!data) {
@@ -249,9 +251,10 @@ const TaskCard = React.memo<{
                     <Select
                         options={statusOptions}
                         value={selectedStatus}
-                        onChange={(selected) =>
+                        onChange={(selected) => {
+                            console.log(selected);
                             handleChange(index, 'status', selected?.value ?? '')
-                        }
+                        }}
                         isDisabled={task._delete}
                     />
                 </div>
