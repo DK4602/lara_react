@@ -73,6 +73,19 @@ abstract class BaseRepositories implements RepositoryInterface
         }
     }
 
+    public function insert($data)
+    {
+        try
+        {
+            return $this->model->insert($data);
+        }
+        catch (QueryException $exc) 
+        {
+            Log::error($exc->getMessage(), $exc->getTrace());
+            return null;
+        }
+    }
+
     public function show($id, $relation = [],$where = [],$filter = [])
     {
         $query = $this->model->newQuery();
@@ -116,6 +129,19 @@ abstract class BaseRepositories implements RepositoryInterface
         {
             $data = $this->show($id);
             return $data->delete();
+        }
+        catch (QueryException $exc) 
+        {
+            Log::error($exc->getMessage(), $exc->getTrace());
+            return null;
+        }
+    }
+
+    public function bulkDelete($ids)
+    {
+        try
+        {
+            return $this->model->whereIn('id', $ids)->delete();
         }
         catch (QueryException $exc) 
         {

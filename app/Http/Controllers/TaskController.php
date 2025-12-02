@@ -108,35 +108,51 @@ class TaskController extends Controller
     public function sync(Request $request, $projectId)
     {
         $tasks = $request->input('tasks', []);
+        $newTasks = [];
+        $deletedTaskIds = [];
+        $updateTasks = [];
+        foreach ($tasks as $task) {
+
+        if (!empty($task['_new'])) {
+            $newTasks[] = [
+                'task_name'     => $task['task_name'],
+                'task_description' => $task['task_description'],
+                'status'        => $task['status'],
+                'project_id'    => $projectId,
+                'employee_id'   => $task['employee_id'],
+                'start_date'    => $task['start_date'],
+                'end_date'      => $task['end_date'],
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ];
+
+        } elseif (!empty($task['_delete'])) {
+            $deleteIds[] = $task['id'];
+
+        } else {
+            $updateTasks[$task['id']] = [
+                'task_name'     => $task['task_name'],
+                'task_description' => $task['task_description'],
+                'status'        => $task['status'],
+                'employee_id'   => $task['employee_id'],
+                'start_date'    => $task['start_date'],
+                'end_date'      => $task['end_date'],
+            ];
+        }
+    }
         DB::beginTransaction();
         try {
-            foreach ($tasks as $taskData) {
-                if (isset($taskData['_new']) && $taskData['_new']) {
-                    // Create new task
-                    $this->taskRepositories->store([
-                        'task_name' => $taskData['task_name'],
-                        'task_description' => $taskData['task_description'],
-                        'status' => $taskData['status'],
-                        'project_id' => $projectId,
-                        'employee_id' => $taskData['employee_id'],
-                        'start_date' => $taskData['start_date'],
-                        'end_date' => $taskData['end_date'],
-                    ]);
-                } elseif (isset($taskData['_delete']) && $taskData['_delete']) {
-                    // Delete existing task
-                    $this->taskRepositories->destroy($taskData['id']);
-                } else {
-                    // Update existing task
-                    $this->taskRepositories->update([
-                        'task_name' => $taskData['task_name'],
-                        'task_description' => $taskData['task_description'],
-                        'status' => $taskData['status'],
-                        'employee_id' => $taskData['employee_id'],
-                        'start_date' => $taskData['start_date'],
-                        'end_date' => $taskData['end_date'],
-                    ], $taskData['id']);
-                }
+           if(!empty($newTasks)) {
+            $this->taskRepositories->insert($newTasks);
+           }
+           if(!empty($deletedTaskIds)) {
+            $this->taskRepositories->bulkDelete($deletedTaskIds);
+           }
+           if(!empty($updateTasks)) {
+            foreach($updateTasks as $id => $data) {
+                $this->taskRepositories->update($data, $id);
             }
+           }
             DB::commit();
             return redirect()->back()->with('success', 'Tasks synchronized successfully!');
         } catch (\Exception $e) {
